@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>소스애드 광고 MBTI 테스트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gothic+A1:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tom:#FF6A13; --mus:#FFD9B8; --ink:#1F1A17; --onTom:#1F1A17; --tomText:#C24A00;
+  --bg:#FFFFFF; --grid:#FFF1E6; --card:#FFFFFF; --text:#1F1A17; --muted:#5C544C; --line:#1F1A17; --chip:#FFEBDD;
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1B1816; --grid:#25211E; --card:#2A2522; --text:#F5EFE6; --muted:#C2B8AC; --line:#F5EFE6; --chip:#3A332E; --tomText:#FF8A45; color-scheme:dark;}}
+:root[data-theme="dark"]{--bg:#1B1816; --grid:#25211E; --card:#2A2522; --text:#F5EFE6; --muted:#C2B8AC; --line:#F5EFE6; --chip:#3A332E; --tomText:#FF8A45; color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background-color:var(--bg);color:var(--text);
+  background-image:linear-gradient(var(--grid) 2px,transparent 2px),linear-gradient(90deg,var(--grid) 2px,transparent 2px);background-size:32px 32px;
+  font-family:"Gothic A1","Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:480px;margin:0 auto;min-height:100%;position:relative;padding:0 20px 40px}
+.jua{font-family:Jua,"Gothic A1",sans-serif;font-weight:400}
+.screen{display:none}.screen.on{display:block}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--mus);outline-offset:3px}
+
+/* intro */
+.drip{display:block;width:calc(100% + 40px);margin:0 -20px;height:auto}
+.top{background:var(--tom);margin:0 -20px;padding:28px 24px 0;color:var(--onTom)}
+.top .brand{font-weight:800;font-size:14px;opacity:.9}
+.top h1{margin:10px 0 0;font-size:44px;line-height:1.1}
+.intro-body{text-align:center;padding-top:8px}
+.mascot{width:150px;height:auto;margin:6px auto 0;display:block}
+.lead{font-size:17px;line-height:1.6;color:var(--muted);margin:10px 0 22px}
+.axes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 26px;text-align:left}
+.ax{background:var(--card);border:3px solid var(--line);border-radius:16px;padding:10px 12px;box-shadow:3px 3px 0 var(--line);font-size:14px;font-weight:700;line-height:1.5}
+.ax b{font-family:Jua,sans-serif;font-weight:400;font-size:20px;margin-right:2px}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:60px;border-radius:999px;border:3px solid var(--line);font-family:Jua,sans-serif;font-size:22px;box-shadow:4px 4px 0 var(--line);text-decoration:none;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--line)}
+.btn.primary{background:var(--tom);color:var(--ink)}
+.btn.yellow{background:var(--tom);color:var(--ink)}
+.btn.plain{background:var(--card);color:var(--text)}
+.event{margin-top:20px;font-size:14px;color:var(--muted);line-height:1.6}
+.event b{color:var(--tomText)}
+
+/* question */
+.qhead{padding-top:28px}
+.qcount{font-weight:800;font-size:13px;color:var(--muted);letter-spacing:.04em}
+.bar{height:14px;border:3px solid var(--line);border-radius:999px;margin:10px 0 0;overflow:hidden;background:var(--card)}
+.bar i{display:block;height:100%;background:var(--tom);width:0;transition:width .3s ease}
+.qno{font-size:56px;color:var(--tomText);margin:34px 0 4px;line-height:1}
+.qtext{font-size:28px;line-height:1.35;margin:0 0 34px;word-break:keep-all}
+.opts{display:grid;gap:16px}
+.opt{display:block;width:100%;text-align:left;background:var(--card);border:3px solid var(--line);border-radius:22px;padding:20px 20px;font-size:18px;font-weight:700;line-height:1.45;box-shadow:4px 4px 0 var(--line);word-break:keep-all;transition:transform .08s,box-shadow .08s,background .15s}
+.opt:hover{background:var(--chip)}
+.opt:active,.opt.pick{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--line);background:var(--mus);color:var(--ink)}
+.back{margin-top:22px;background:none;border:0;color:var(--muted);font-weight:700;font-size:15px;padding:10px 4px;min-height:44px}
+
+/* loading */
+.loading{text-align:center;padding-top:30vh}
+.loading p{font-size:26px;margin:18px 0 0}
+.dots span{display:inline-block;width:16px;height:16px;border-radius:50%;background:var(--tom);margin:0 5px;animation:b 0.9s infinite ease-in-out}
+.dots span:nth-child(2){animation-delay:.15s;background:var(--mus)}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-14px)}}
+
+/* result */
+.rtop{text-align:center;padding-top:26px}
+.rtop small{font-size:15px;font-weight:700;color:var(--muted)}
+.code{display:inline-block;margin:12px 0 6px;font-size:68px;line-height:1;padding:8px 24px 6px;border:4px solid var(--line);border-radius:22px;box-shadow:5px 5px 0 var(--line)}
+.code.live{background:var(--tom);color:var(--ink)}.code.clip{background:var(--mus);color:var(--ink)}
+.rname{font-size:34px;margin:14px 0 4px}
+.rkind{font-size:15px;font-weight:700;color:var(--muted)}
+.rmascot{width:120px;margin:10px auto 0;display:block}
+.sec{background:var(--card);border:3px solid var(--line);border-radius:22px;box-shadow:4px 4px 0 var(--line);padding:20px 20px;margin-top:20px}
+.sec h2{font-size:22px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.sec h2 .tag{font-family:"Gothic A1",sans-serif;font-weight:800;font-size:13px;padding:3px 10px;border-radius:999px;border:2px solid var(--line)}
+.sec p{margin:0;font-size:17px;line-height:1.65;word-break:keep-all}
+.tag.out{background:var(--card)}.tag.in{background:var(--tom);color:var(--ink)}
+.letters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.letters div{text-align:center;border:2px solid var(--line);border-radius:14px;padding:8px 4px;font-size:13px;font-weight:700;line-height:1.4}
+.letters b{display:block;font-family:Jua,sans-serif;font-weight:400;font-size:24px}
+.mix{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.mix li{background:var(--chip);border-radius:999px;padding:8px 14px;font-weight:800;font-size:15px}
+.gift{background:var(--ink);color:#fff;border-color:var(--ink)}
+.gift h2{color:var(--tom)}
+.gift p{color:#E9E2D8}
+.gift .btn{margin-top:16px;border-color:var(--mus);box-shadow:4px 4px 0 var(--mus)}
+.acts{display:grid;gap:14px;margin-top:22px}
+.acts .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.acts .row .btn{font-size:19px}
+
+/* modal + toast */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal.on{display:flex}
+.mbox{background:var(--card);border:3px solid var(--line);border-radius:22px;max-width:420px;width:100%;max-height:100%;overflow:auto;padding:20px;text-align:center}
+.mbox h3{margin:0 0 6px;font-size:24px}
+.mbox p{margin:0 0 14px;color:var(--muted);font-size:15px;line-height:1.5}
+.mbox img{width:100%;border-radius:12px;border:2px solid var(--line)}
+.mbox .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.mbox .btn{min-height:52px;font-size:18px}
+.toast{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-weight:700;font-size:15px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:30}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<!-- INTRO -->
+<section class="screen on" id="s-intro" aria-label="시작">
+  <div class="top">
+    <div class="brand">SauceAD × Sauce Day</div>
+    <h1 class="jua">나의 광고 MBTI<br>찾기 테스트</h1>
+  </div>
+  <svg class="drip" viewBox="0 0 480 28" preserveAspectRatio="none" aria-hidden="true"><path fill="#FF6A13" d="M0 0H480V10Q460 28 440 10T400 10T360 10T320 10T280 10T240 10T200 10T160 10T120 10T80 10T40 10T0 10Z"/></svg>
+  <div class="intro-body">
+    <svg class="mascot" viewBox="0 0 160 196" role="img" aria-label="소스통 캐릭터">
+      <path d="M80 4L68 34H92Z" fill="#1F1A17"/>
+      <rect x="54" y="30" width="52" height="26" rx="9" fill="#1F1A17"/>
+      <rect x="28" y="52" width="104" height="136" rx="36" fill="#FF6A13" stroke="#1F1A17" stroke-width="6"/>
+      <path d="M44 84v40" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+      <ellipse cx="64" cy="100" rx="8" ry="10" fill="#1F1A17"/><ellipse cx="98" cy="100" rx="8" ry="10" fill="#1F1A17"/>
+      <circle cx="66" cy="97" r="3" fill="#fff"/><circle cx="100" cy="97" r="3" fill="#fff"/>
+      <ellipse cx="52" cy="118" rx="8" ry="5" fill="#FFD9B8"/><ellipse cx="110" cy="118" rx="8" ry="5" fill="#FFD9B8"/>
+      <path d="M72 118q9 9 18 0" fill="none" stroke="#1F1A17" stroke-width="5" stroke-linecap="round"/>
+      <rect x="48" y="138" width="64" height="32" rx="11" fill="#fff" stroke="#1F1A17" stroke-width="4"/>
+      <text x="80" y="162" text-anchor="middle" font-family="Jua, sans-serif" font-size="22" fill="#1F1A17">AD</text>
+    </svg>
+    <p class="lead">우리 브랜드는 광고할 때<br>겉으로는 어떻고, 속으로는 뭘 원할까?<br>12개 질문으로 알아보는 광고 성향 테스트</p>
+    <div class="axes">
+      <div class="ax"><b>E</b> 라이브파 / <b>I</b> 숏폼파</div>
+      <div class="ax"><b>S</b> 데이터파 / <b>N</b> 촉파</div>
+      <div class="ax"><b>T</b> 매출파 / <b>F</b> 팬심파</div>
+      <div class="ax"><b>J</b> 계획파 / <b>P</b> 즉흥파</div>
+    </div>
+    <button class="btn primary" id="start">테스트 시작하기</button>
+    <p class="event">테스트 후 <b>소스애드 회원가입</b>하고 결과를 부스에 보여주면<br><b>30만원 상당 맞춤 미디어믹스</b>를 추천해 드려요</p>
+  </div>
+</section>
+
+<!-- QUESTION -->
+<section class="screen" id="s-q" aria-label="질문">
+  <div class="qhead">
+    <div class="qcount" id="qcount">QUESTION 1 / 12</div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="12" aria-valuenow="1" id="bar"><i id="barfill"></i></div>
+  </div>
+  <div class="qno jua" id="qno">Q1</div>
+  <h2 class="qtext jua" id="qtext"></h2>
+  <div class="opts">
+    <button class="opt" id="optA"></button>
+    <button class="opt" id="optB"></button>
+  </div>
+  <button class="back" id="back">이전 질문으로</button>
+</section>
+
+<!-- LOADING -->
+<section class="screen" id="s-load" aria-label="분석 중">
+  <div class="loading">
+    <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <p class="jua">광고 MBTI 분석 중</p>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section class="screen" id="s-result" aria-label="결과">
+  <div class="rtop">
+    <small>우리 브랜드의 광고 MBTI는</small><br>
+    <div class="code jua" id="rcode">ESTJ</div>
+    <div class="rname jua" id="rname"></div>
+    <div class="rkind" id="rkind"></div>
+  </div>
+  <div class="sec">
+    <h2 class="jua"><span class="tag out">겉으로는</span></h2>
+    <p id="rout"></p>
+  </div>
+  <div class="sec">
+    <h2 class="jua"><span class="tag in">속으로는</span></h2>
+    <p id="rin"></p>
+  </div>
+  <div class="sec">
+    <h2 class="jua">우리 브랜드 광고 성향</h2>
+    <div class="letters" id="rletters"></div>
+  </div>
+  <div class="sec">
+    <h2 class="jua">찰떡 추천 미디어믹스</h2>
+    <ul class="mix" id="rmix"></ul>
+  </div>
+  <div class="sec gift">
+    <h2 class="jua">30만원 상당 미디어믹스 받는 법</h2>
+    <p>소스애드에 회원가입한 뒤, 이 결과 화면을 부스 직원에게 보여주세요. 우리 브랜드 유형에 맞춘 미디어믹스를 추천해 드려요.</p>
+    <a class="btn yellow" id="join" href="https://saucead.com" target="_blank" rel="noopener">소스애드 회원가입하기</a>
+  </div>
+  <div class="acts">
+    <button class="btn primary" id="save">결과 이미지 저장하기</button>
+    <div class="row">
+      <button class="btn plain" id="retry">다시 해보기</button>
+      <button class="btn plain" id="share">테스트 공유하기</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+  <div class="mbox">
+    <h3 class="jua" id="mtitle">이미지가 만들어졌어요</h3>
+    <p>휴대폰에서는 아래 이미지를 꾹 눌러<br>‘이미지 저장’을 눌러 주세요.</p>
+    <img id="mimg" alt="광고 MBTI 결과 이미지">
+    <div class="row">
+      <a class="btn yellow" id="mdl" download="광고MBTI_결과.png">내려받기</a>
+      <button class="btn plain" id="mclose">닫기</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+// 회원가입 링크: 실제 가입 페이지 주소로 바꿔 주세요.
+const JOIN_URL = "https://saucead.com";
+// 테스트 공유 링크: 웹에 올린 뒤 생긴 테스트 주소를 넣어 주세요. 비워 두면 현재 페이지 주소를 사용해요.
+const SHARE_URL = "";
+
+const QS = [
+ {ax:0,q:"신상품이 나왔다!<br>가장 먼저 하고 싶은 건?",a:"라이브 켜서 직접 보여주고 설명하기",b:"15초 숏폼으로 임팩트 있게 보여주기"},
+ {ax:1,q:"광고 소재를 고를 때<br>나는?",a:"지난 캠페인 클릭률부터 확인한다",b:"‘이거다!’ 감이 오는 걸 고른다"},
+ {ax:2,q:"이번 캠페인 대성공!<br>내 기준은?",a:"매출·ROAS 목표 달성",b:"댓글창이 찐팬으로 가득"},
+ {ax:3,q:"다음 달 광고 계획,<br>지금 어디까지 됐어?",a:"이미 캘린더에 다 적혀 있음",b:"다음 달의 내가 알아서 하겠지"},
+ {ax:0,q:"고객 질문이<br>쏟아질 때 나는?",a:"실시간으로 바로바로 답해야 속 시원",b:"모아서 콘텐츠로 한 번에 정리"},
+ {ax:1,q:"성과 보고 받을 때<br>제일 반가운 건?",a:"매체별·시간대별로 정리된 표",b:"“요즘 반응 진짜 좋아요” 한마디"},
+ {ax:2,q:"라이브 중 댓글<br>“가격이 좀 비싸요”",a:"쿠폰·혜택 안내로 바로 구매 설득",b:"브랜드가 이 가격인 이유를 이야기"},
+ {ax:3,q:"갑자기 트렌드 밈이 떴다!",a:"우리 일정·톤에 맞는지 먼저 체크",b:"고민은 배송만 늦출 뿐, 오늘 올린다"},
+ {ax:0,q:"주말 저녁 7시,<br>우리 브랜드가 있어야 할 곳은?",a:"시청자와 수다 떠는 라이브 방송",b:"스크롤 사이사이 숏폼 피드"},
+ {ax:1,q:"새 광고 매체를<br>제안받았다!",a:"레퍼런스 데이터부터 보여주세요",b:"재밌어 보이는데? 일단 해보죠"},
+ {ax:2,q:"광고비가 100만 원<br>더 생긴다면?",a:"전환 잘 나오는 매체에 바로 증액",b:"우리 브랜드 아는 사람 늘리기"},
+ {ax:3,q:"내 광고 예산<br>운영 스타일은?",a:"월별·매체별로 딱딱 나눠서",b:"터지는 곳에 그때그때 몰아서"}
+];
+const AX=[["E","I"],["S","N"],["T","F"],["J","P"]];
+const AXNAME={E:"라이브파",I:"숏폼파",S:"데이터파",N:"촉파",T:"매출파",F:"팬심파",J:"계획파",P:"즉흥파"};
+
+const R={
+"ESTJ":["라이브 매출 사령관","방송 일정부터 큐시트까지 완벽하게 챙기는 철두철미 담당자. 매출 숫자로 모든 걸 증명해요.","사실 제일 필요한 건 방송 시간에 맞춰 분 단위로 들어오는 ‘확실한 시청자’예요.",["시간대 타깃 라이브 유입 광고","토스 전환형 광고","SA 검색광고"]],
+"ESTP":["오늘밤 완판 해결사","오늘 라이브는 오늘 승부! 순발력 하나는 누구에게도 안 지는 해결사예요.","당일에도 바로 쏠 수 있는 빠른 유입 채널을 늘 찾고 있어요.",["당일 집중 라이브 유입 광고","토스 전환형 광고","DA 리타깃팅"]],
+"ESFJ":["라이브 단골 반장","단골 시청자 닉네임까지 기억하는 다정한 진행자예요.","한 번 왔던 고객을 다시 데려올 방법이 늘 아쉬워요.",["정기 라이브 유입 광고","DA 리타깃팅","클립부스터"]],
+"ESFP":["라이브 인싸 MC","방송만 켜면 분위기가 살아나는 타고난 분위기 메이커예요.","이 신나는 라이브를 더 많은 사람에게 보여주고 싶어요.",["라이브 유입 광고","클립부스터","오!클립부스터"]],
+"ENTJ":["판 짜는 전략가","트렌드를 먼저 읽고 큰 그림을 그리는 리더형 마케터예요.","라이브와 숏폼을 한 번에 엮어 줄 든든한 파트너가 필요해요.",["라이브 유입 광고","클립부스터","SA 검색광고"]],
+"ENTP":["라이브 실험 천재","“이번엔 이 매체 어때요?” 아이디어가 마르지 않는 실험가예요.","여러 실험 결과를 한눈에 비교할 데이터가 고파요.",["라이브 유입 광고 매체 테스트","클립부스터","DA 리타깃팅"]],
+"ENFJ":["팬미팅 호스트","시청자 한 명 한 명과 눈 맞추며 소통하는 소통왕이에요.","우리 브랜드를 진심으로 좋아해 줄 ‘진짜 타깃’을 만나고 싶어요.",["라이브 유입 광고","오!클립부스터","DA 리타깃팅"]],
+"ENFP":["텐션 폭발 라이버","라이브 텐션 하나는 업계 최고, 화제를 몰고 다녀요.","화제가 된 순간을 숏폼으로 더 멀리 퍼뜨리고 싶어요.",["라이브 유입 광고","클립부스터","오!클립부스터"]],
+"ISTJ":["숏폼 성실 적립왕","매주 같은 요일에 업로드하는 꾸준함의 아이콘이에요.","꾸준히 쌓은 노력이 숫자로 차곡차곡 보이길 바라요.",["클립부스터 상시 집행","SA 검색광고","DA 리타깃팅"]],
+"ISTP":["숏폼 효율 장인","군더더기 없이 핵심만! 쿨한 효율파 마케터예요.","돈 새는 지면 없이 잘 되는 곳에만 집중하고 싶어요.",["클립부스터","DA 리타깃팅","SA 검색광고"]],
+"ISFJ":["다정한 숏폼 큐레이터","브랜드 톤앤매너를 꼼꼼히 지키는 섬세한 큐레이터예요.","우리 브랜드를 좋아해 줄 고객 곁에 조용히, 오래 머물고 싶어요.",["오!클립부스터","클립부스터","DA 리타깃팅"]],
+"ISFP":["감성 숏폼 장인","영상 한 컷도 허투루 넘기지 않는 감성 장인이에요.","이 감성을 알아봐 줄 사람들에게 더 많이 보여주고 싶어요.",["클립부스터","오!클립부스터","라이브 유입 광고"]],
+"INTJ":["숏폼 빌드업 설계자","관심부터 구매까지 단계를 설계하는 치밀한 전략가예요.","숏폼으로 모은 관심을 구매로 이어 줄 다음 단계가 필요해요.",["클립부스터","SA 검색광고","라이브 유입 광고"]],
+"INTP":["숏폼 실험실 연구원","어떤 숏폼이 먹히는지 끝까지 파고드는 연구원이에요.","소재 테스트를 빠르게 돌릴 넓은 노출 지면이 필요해요.",["클립부스터 소재 테스트","DA 리타깃팅","SA 검색광고"]],
+"INFJ":["브랜드 스토리텔러","브랜드 철학을 이야기로 풀어내는 스토리텔러예요.","한 번 보고 끝이 아니라, 오래 기억되는 브랜드가 되고 싶어요.",["오!클립부스터","클립부스터","DA 리타깃팅"]],
+"INFP":["숏폼 몽상가","머릿속이 브랜드 세계관으로 가득한 몽상가예요.","이 세계관을 알아봐 줄 첫 팬들을 만나고 싶어요.",["클립부스터","오!클립부스터","라이브 유입 광고"]]
+};
+
+const $=id=>document.getElementById(id);
+let idx=0, ans=[], code="";
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));scrollTo(0,0)}
+function renderQ(){
+  const q=QS[idx];
+  $('qcount').textContent=`QUESTION ${idx+1} / ${QS.length}`;
+  $('barfill').style.width=((idx+1)/QS.length*100)+'%';
+  $('bar').setAttribute('aria-valuenow',idx+1);
+  $('qno').textContent='Q'+(idx+1);
+  $('qtext').innerHTML=q.q;
+  $('optA').textContent=q.a;$('optB').textContent=q.b;
+  $('optA').classList.remove('pick');$('optB').classList.remove('pick');
+  $('back').style.visibility=idx? 'visible':'hidden';
+}
+function pick(v,el){
+  el.classList.add('pick');
+  ans[idx]=v;
+  setTimeout(()=>{ if(idx<QS.length-1){idx++;renderQ()} else finish() },180);
+}
+function finish(){
+  const cnt=[0,0,0,0];
+  QS.forEach((q,i)=>{ if(ans[i]===0) cnt[q.ax]++ });
+  code=AX.map((p,i)=>cnt[i]>=2?p[0]:p[1]).join('');
+  show('s-load');
+  setTimeout(()=>{renderResult();show('s-result')},1400);
+}
+function renderResult(){
+  const [name,out,inn,mix]=R[code];
+  const live=code[0]==='E';
+  $('rcode').textContent=code;
+  $('rcode').className='code jua '+(live?'live':'clip');
+  $('rname').textContent=name;
+  $('rkind').textContent=live?'라이브커머스 광고가 잘 맞는 유형':'숏폼 광고가 잘 맞는 유형';
+  $('rout').textContent=out;$('rin').textContent=inn;
+  $('rletters').innerHTML=code.split('').map(c=>`<div><b>${c}</b>${AXNAME[c]}</div>`).join('');
+  $('rmix').innerHTML=mix.map(m=>`<li>${m}</li>`).join('');
+  try{history.replaceState(null,'','#'+code)}catch(e){}
+}
+$('start').onclick=()=>{idx=0;ans=[];renderQ();show('s-q')};
+$('optA').onclick=e=>pick(0,e.currentTarget);
+$('optB').onclick=e=>pick(1,e.currentTarget);
+$('back').onclick=()=>{if(idx>0){idx--;renderQ()}};
+$('retry').onclick=()=>{try{history.replaceState(null,'',location.pathname)}catch(e){};show('s-intro')};
+$('join').href=JOIN_URL;
+
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),1800)}
+$('share').onclick=async()=>{
+  const url=SHARE_URL||location.href.split('#')[0];
+  if(!/^https?:/.test(url)){toast('웹에 올린 뒤에 공유 링크가 생겨요');return}
+  const data={title:'나의 광고 MBTI 찾기 테스트',text:`우리 브랜드 광고 MBTI는 ${code}! 너도 해봐`,url};
+  if(navigator.share){try{await navigator.share(data);return}catch(e){if(e.name==='AbortError')return}}
+  try{await navigator.clipboard.writeText(url);toast('테스트 링크를 복사했어요')}catch(e){toast('주소창의 링크를 복사해 공유해 주세요')}
+};
+
+// 결과 이미지 만들기
+function wrap(ctx,text,x,y,maxW,lh){
+  let line='',lines=[];
+  const PUN='.,!?’”)';for(const ch of text){const t=line+ch; if(ctx.measureText(t).width>maxW&&line&&!PUN.includes(ch)){lines.push(line);line=ch}else line=t}
+  if(line)lines.push(line);
+  lines.forEach((l,i)=>ctx.fillText(l,x,y+i*lh));return y+lines.length*lh;
+}
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+$('save').onclick=async()=>{
+  try{await document.fonts.load('60px Jua');await document.fonts.load('800 30px "Gothic A1"')}catch(e){}
+  const [name,out,inn,mix]=R[code]; const live=code[0]==='E';
+  const W=1080,H=1500,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const TOM='#FF6A13',MUS='#FFD9B8',INK='#1F1A17',J='Jua, sans-serif',G='"Gothic A1", sans-serif';
+  x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  x.strokeStyle='#FFF1E6';x.lineWidth=3;for(let i=0;i<W;i+=54){x.beginPath();x.moveTo(i,0);x.lineTo(i,H);x.stroke()}for(let j=0;j<H;j+=54){x.beginPath();x.moveTo(0,j);x.lineTo(W,j);x.stroke()}
+  x.fillStyle=TOM;x.beginPath();x.moveTo(0,0);x.lineTo(W,0);x.lineTo(W,160);for(let i=W;i>0;i-=90){x.quadraticCurveTo(i-45,196,i-90,160)}x.closePath();x.fill();
+  x.fillStyle=INK;x.font=`800 30px ${G}`;x.textAlign='left';x.fillText('SauceAD x Sauce Day',60,56);
+  x.font=`54px ${J}`;x.fillText('나의 광고 MBTI',60,128);
+  x.textAlign='center';x.fillStyle='#5C544C';x.font=`800 32px ${G}`;x.fillText('우리 브랜드의 광고 MBTI는',W/2,300);
+  rr(x,W/2-210+8,330+8,420,170,32);x.fillStyle=INK;x.fill();
+  rr(x,W/2-210,330,420,170,32);x.fillStyle=live?TOM:MUS;x.fill();x.lineWidth=7;x.strokeStyle=INK;x.stroke();
+  x.fillStyle=INK;x.font=`130px ${J}`;x.fillText(code,W/2,465);
+  x.fillStyle=INK;x.font=`76px ${J}`;x.fillText(name,W/2,610);
+  x.fillStyle='#5C544C';x.font=`700 30px ${G}`;x.fillText(live?'라이브커머스 광고가 잘 맞는 유형':'숏폼 광고가 잘 맞는 유형',W/2,662);
+  function box(y,label,txt,inTag){
+    x.textAlign='left';x.font=`600 34px ${G}`;
+    const tmp=document.createElement('canvas').getContext('2d');tmp.font=x.font;
+    let n=1,line='';for(const ch of txt){const t=line+ch;if(tmp.measureText(t).width>880&&line&&!'.,!?’”)'.includes(ch)){n++;line=ch}else line=t}
+    const h=110+n*50;
+    rr(x,66,y+6,960,h,30);x.fillStyle=INK;x.fill();rr(x,60,y,960,h,30);x.fillStyle='#fff';x.fill();x.lineWidth=5;x.strokeStyle=INK;x.stroke();
+    rr(x,96,y+30,150,48,24);x.fillStyle=inTag?TOM:'#fff';x.fill();x.lineWidth=3;x.strokeStyle=INK;x.stroke();
+    x.fillStyle=INK;x.font=`800 26px ${G}`;x.textAlign='center';x.fillText(label,171,y+63);
+    x.textAlign='left';x.fillStyle=INK;x.font=`600 34px ${G}`;wrap(x,txt,100,y+128,880,50);
+    return y+h+34;
+  }
+  let y=box(710,'겉으로는',out,false);y=box(y,'속으로는',inn,true);
+  x.textAlign='left';x.fillStyle='#C24A00';x.font=`800 30px ${G}`;x.fillText('찰떡 추천 미디어믹스',60,y+20);
+  let cx=60,cy=y+50;x.font=`800 30px ${G}`;
+  mix.forEach(m=>{const w=x.measureText(m).width+48;if(cx+w>1020){cx=60;cy+=74}rr(x,cx,cy,w,58,29);x.fillStyle='#FFEBDD';x.fill();x.fillStyle=INK;x.fillText(m,cx+24,cy+40);cx+=w+14});
+  x.fillStyle=INK;x.fillRect(0,H-110,W,110);x.fillStyle=TOM;x.textAlign='center';x.font=`40px ${J}`;
+  x.fillText('소스애드 부스에서 30만원 상당 미디어믹스 받기',W/2,H-42);
+  const url=c.toDataURL('image/png');$('mimg').src=url;$('mdl').href=url;$('modal').classList.add('on');$('mclose').focus();
+};
+$('mclose').onclick=()=>$('modal').classList.remove('on');
+$('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('on')};
+addEventListener('keydown',e=>{if(e.key==='Escape')$('modal').classList.remove('on')});
+
+// 링크에 #ESTJ 처럼 유형이 붙어 있으면 바로 결과 보기 (부스 직원 확인용)
+const h=location.hash.replace('#','').toUpperCase();
+if(R[h]){code=h;renderResult();show('s-result')}
+</script>
+</body>
+</html>
